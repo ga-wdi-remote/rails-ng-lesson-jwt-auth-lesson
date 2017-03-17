@@ -1,4 +1,10 @@
-angular.module('giphyAngularApp', ['ui.router']).config(GiphyRouter);
+angular.module('giphyAngularApp', ['ui.router'])
+.config(GiphyRouter)
+.config(authInterceptor)
+
+function authInterceptor($httpProvider) {
+  $httpProvider.interceptors.push('AuthInterceptor')
+}
 
 function GiphyRouter($stateProvider, $urlRouterProvider){
 

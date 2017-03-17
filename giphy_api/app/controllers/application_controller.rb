@@ -1,8 +1,10 @@
 class ApplicationController < ActionController::API
+  # IS THE USER THE LOGGED IN
   def authenticate
     render json: {status: 401, message: "unauthorized"} unless decode_token(bearer_token)
   end
 
+  # DOES THE USER OWN THE RESOURCE THEY'RE ASKING FOR
   def authorize
     render json: {status: 401, message: "unauthorized"} unless current_user.id == params[:id].to_i
   end

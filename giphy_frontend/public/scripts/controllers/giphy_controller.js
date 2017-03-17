@@ -1,5 +1,6 @@
 function GiphyController($scope, $http, $state, $stateParams, $rootScope) {
   var self = this;
+  var server = 'http://localhost:3000'
 
   self.savedGifs = [];
 
@@ -8,18 +9,17 @@ function GiphyController($scope, $http, $state, $stateParams, $rootScope) {
   });
 
   function populateInitialState(user) {
-    $http.get(`/users/${user._id}/gifs`)
+    $http.get(`${server}/users/${user.id}/gifs`)
       .then(function(response) {
         self.savedGifs = response.data.gifs
       })
   }
 
   function getSavedGifs(currentUser) {
-    $http.get(`/users/${currentUser._id}/gifs`)
+    $http.get(`${server}/users/${currentUser.id}/gifs`)
       .then(function(response) {
         self.savedGifs = response.data.gifs
-
-        $state.go('savedGifs', {userId: currentUser._id})
+        $state.go('savedGifs', {userId: currentUser.id})
       })
   }
 
@@ -34,13 +34,13 @@ function GiphyController($scope, $http, $state, $stateParams, $rootScope) {
 
   function saveGif(url, currentUser) {
     console.log(currentUser)
-    $http.post(`/users/${currentUser._id}/gifs`, { url: url, name: self.name } )
+    $http.post(`${server}/users/${currentUser.id}/gifs`, { url: url, name: self.name } )
       .then(function(serverResponse) {
         self.savedGifs.push(serverResponse.data.gif);
         self.name = '';
-        giphy.gifUrl = '';
+        self.gifUrl = '';
 
-        $state.go('savedGifs', { userId: currentUser._id })
+        $state.go('savedGifs', { userId: currentUser.id })
       })
   }
 
@@ -49,28 +49,28 @@ function GiphyController($scope, $http, $state, $stateParams, $rootScope) {
     self.name = gif.name
 
     $state.go('updateGif', {
-      userId: currentUser._id,
-      gifId: gif._id
+      userId: currentUser.id,
+      gifId: gif.id
     })
    }
 
   function updateGif(currentUser) {
-    $http.put(`/users/${currentUser._id}/gifs/${$stateParams.gifId}`, { name: self.name, url: self.url } )
+    $http.put(`${server}/users/${currentUser.id}/gifs/${$stateParams.gifId}`, { name: self.name, url: self.url } )
       .then(function(giphyResponse) {
-        self.savedGifs = giphyResponse.data.currentUser.gifs;
+        self.savedGifs = giphyResponse.data.gifs;
 
         self.url = '';
         self.name = '';
 
-        $state.go('savedGifs', { userId: currentUser._id })
+        $state.go('savedGifs', { userId: currentUser.id })
       })
   }
 
   function deleteGif(id, currentUser) {
     console.log(id)
-    $http.delete(`/users/${currentUser._id}/gifs/${id}`)
+    $http.delete(`${server}/users/${currentUser.id}/gifs/${id}`)
       .then(function(response) {
-        self.savedGifs = response.data.currentUser.gifs
+        self.savedGifs = response.data.gifs
       })
   }
 
