@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="giphyAngularApp">
+<head>
+  <meta charset="UTF-8">
+  <title>Giphy</title>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.2.15/angular-ui-router.js"></script>
+
+  <!-- ROUTER -->
+  <script src="/scripts/router.js"></script>
+  <!-- FACTORIES -->
+  <script src="/scripts/factories/auth_interceptor.js"></script>
+  <script src="/scripts/factories/auth_token_factory.js"></script>
+  <!-- CONTROLLERS -->
+  <script src="/scripts/controllers/home_controller.js"></script>
+  <script src="/scripts/controllers/auth_controller.js"></script>
+  <script src="/scripts/controllers/giphy_controller.js"></script>
+  <!-- APP -->
+  <script src="/scripts/app.js"></script>
+  
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body ng-controller="HomeController as home" >
+    <div ng-controller="AuthController as auth">
+      <ul>
+        <li ng-if="!home.currentUser" ui-sref="signup">signup</li>
+        <li ng-if="!home.currentUser" ui-sref="login">login</li>
+        <li ng-if="home.currentUser" ng-click="auth.logout()">logout</li>
+      </ul>
+    </div>
+    <div ng-controller="GiphyController as giphy">
+      <div class="container">
+        <div ng-if="home.currentUser">
+          <button ui-sref-active="active" ng-click="giphy.getGif()" class="get-gif">GET GIF</button>
+          <button ng-click="giphy.saveGif(giphy.gifUrl, home.currentUser)">SAVE GIF</button>
+          <button ng-click="giphy.getSavedGifs(home.currentUser)" class="saved-gifs">See Saved Gifs</button>
+        </div>
+
+        <ui-view>
+        </ui-view>
+
+      </div>
+    </div>
+  </div>
+</body>
+</html>
